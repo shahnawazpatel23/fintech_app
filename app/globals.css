@@ -155,7 +155,7 @@
 
   /* Right sidebar */
   .right-sidebar {
-    @apply no-scrollbar hidden h-screen max-h-screen flex-col border-l border-gray-200 xl:flex w-[355px] xl:overflow-y-scroll !important;
+    @apply no-scrollbar hidden h-screen max-h-screen flex-col border-l border-gray-200 xl:flex min-w-[300px] 2xl:min-w-[355px] xl:overflow-y-scroll !important;
   }
 
   .profile-banner {
@@ -209,7 +209,7 @@
   }
 
   .header-box {
-    @apply flex flex-col gap-1;
+    @apply flex flex-col gap-1 ;
   }
 
   .header-box-title {
@@ -230,7 +230,7 @@
   }
 
   .bank-card_icon {
-    @apply flex size-full flex-1 flex-col items-end justify-between rounded-r-[20px] bg-bank-gradient bg-cover bg-center bg-no-repeat py-5 pr-5;
+    @apply  flex size-full flex-1 flex-col items-end justify-between rounded-r-[20px] bg-bank-gradient bg-cover bg-center bg-no-repeat py-5 pr-5;
   }
 
   /* Bank Info */
