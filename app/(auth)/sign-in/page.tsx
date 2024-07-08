@@ -1,9 +1,13 @@
+import AuthForm from '@/components/AuthForm'
 import React from 'react'
 
-const SignInPage:React.FC = () => {
+const SignInPage = () => {
   return (
-    <div>SignI</div>
+    <section className='flex-center size-full max-sm:px-6'>
+      <AuthForm type='sign-in'/>
+    </section>
   )
+  
 }
 
 export default SignInPage
