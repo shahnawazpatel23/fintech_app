@@ -196,17 +196,17 @@ export const getTransactionStatus = (date: Date) => {
 };
 
 
-export const authFormSchema =(type:string) =>z.object({
-  
-  firstName: type==='sign-in'?z.string().optional(): z.string(),
-  lastName: type==='sign-in'?z.string().optional():z.string(),
-  address1: type==='sign-in'?z.string().optional(): z.string(),
-  state: type==='sign-in'?z.string().optional(): z.string(),
-  city: type==='sign-in'?z.string().optional(): z.string(),
-  postalCode: type==='sign-in'?z.string().optional():z.string(),
-  dateOfBirth: type==='sign-in'?z.string().optional(): z.string(),
-  panNumber: type==='sign-in'?z.string().optional(): z.string().length(10).regex(/^[A-Z0-9]+$/),
-  
+export const authFormSchema = (type: string) => z.object({
+  // sign up
+  firstName: type === 'sign-in' ? z.string().optional() : z.string().min(3),
+  lastName: type === 'sign-in' ? z.string().optional() : z.string().min(3),
+  address1: type === 'sign-in' ? z.string().optional() : z.string().max(50),
+  state: type === 'sign-in' ? z.string().optional() : z.string().min(2).max(2),
+  city: type === 'sign-in' ? z.string().optional() : z.string().max(50),
+  postalCode: type === 'sign-in' ? z.string().optional() : z.string().min(3).max(6),
+  dateOfBirth: type === 'sign-in' ? z.string().optional() : z.string().min(3),
+  ssn: type === 'sign-in' ? z.string().optional() : z.string().min(3),
+  // both
   email: z.string().email(),
   password: z.string().min(8),
 })

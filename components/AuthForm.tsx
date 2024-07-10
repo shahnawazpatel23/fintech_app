@@ -21,6 +21,7 @@ import { authFormSchema } from '@/lib/utils'
 import { Loader2 } from 'lucide-react'
 import { getLoggedInUser, signIn, signUp } from '@/lib/actions/user.actions'
 import { useRouter } from 'next/navigation'
+import PlaidLink from './PlaidLink'
 
 
 
@@ -28,42 +29,62 @@ import { useRouter } from 'next/navigation'
 const AuthForm = ({ type }: { type: string }) => {
     const router = useRouter();
     const [user, setUser] = useState(null);
-    const[loading,setLoading] =useState(false);
-   
+    const [loading, setLoading] = useState(false);
+
     const formSchema = authFormSchema(type);
 
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
+            firstName: "",
+            lastName: "",
+            address1: "",
+            state: "",
+            city: "",
+            postalCode: "",
+            dateOfBirth: "",
+            ssn: "",
             email: "",
-            password:"",
-             
+            password: "",
+
         },
     })
 
     // 2. Define a submit handler.
-    const onSubmit=async(data: z.infer<typeof formSchema>)=> {
-        
+    const onSubmit = async (data: z.infer<typeof formSchema>) => {
+
         setLoading(true);
         try {
-            if(type==='sign-up'){
-                const newUser = await signUp(data);
+            if (type === 'sign-up') {
+                const userData = {
+                    firstName: data.firstName!,
+                    lastName: data.lastName!,
+                    address1: data.address1!,
+                    state: data.state!,
+                    city: data.city!,
+                    postalCode: data.postalCode!,
+                    dateOfBirth: data.dateOfBirth!,
+                    ssn: data.ssn!,
+                    email: data.email,
+                    password: data.password,
+                }
+                const newUser = await signUp(userData);
                 setUser(newUser);
             }
-            if(type==='sign-in'){
+            if (type === 'sign-in') {
                 const response = await signIn({
-                    email:data.email,
-                    password:data.password,
+                    email: data.email,
+                    password: data.password,
                 })
-                if(response){
-                    router.push('/')
+                if (response) {
+                    router.push('/');
                 }
 
             }
         } catch (error) {
-            console.log(error)
-        }finally{
+            console.log('Errorrr in AuthForm',error)
+        } finally {
 
             setLoading(false);
         }
@@ -86,53 +107,55 @@ const AuthForm = ({ type }: { type: string }) => {
                     </p>
                 </div>
             </header>
-            {user ? (
+            {user ?
+             (
                 <div className="flex flex-col gap-4">
-                    {/* here use plaid */}
+                    <PlaidLink user={user} variant='primary' />
                 </div>
-            ) : <>
+            )
+             : <>
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
                         {type === 'sign-up' && (
                             <><div className='flex  gap-4'>
-                             <CustomInput control={form.control} name={'firstName'} label={'First Name'} placeholder={'Enter your first name'} />
-                             <CustomInput control={form.control} name={'lastName'} label={'Last Name'} placeholder={'Enter your last name'} />
-                             </div>
-                             <CustomInput control={form.control} name={'address1'} label={'Address'} placeholder={'Enter your address'} />
-                             <CustomInput control={form.control} name={'state'} label={'State'} placeholder={'Enter your state'} />
-                             <CustomInput control={form.control} name={'city'} label={'City'} placeholder={'Enter your city'} />
-                             <div className='flex gap-4'>
+                                <CustomInput control={form.control} name={'firstName'} label={'First Name'} placeholder={'Enter your first name'} />
+                                <CustomInput control={form.control} name={'lastName'} label={'Last Name'} placeholder={'Enter your last name'} />
+                            </div>
+                                <CustomInput control={form.control} name={'address1'} label={'Address'} placeholder={'Enter your address'} />
+                                <CustomInput control={form.control} name={'state'} label={'State'} placeholder={'Enter your state'} />
+                                <CustomInput control={form.control} name={'city'} label={'City'} placeholder={'Enter your city'} />
+                                <div className='flex gap-4'>
 
-                             <CustomInput control={form.control} name={'postalCode'} label={'Postal Code'} placeholder={'Ex. : 482002'} />
-                             <CustomInput control={form.control} name={'dateOfBirth'} label={'Date of Birth'} placeholder={'YYYY-MM-DD'} />
-                             </div>
-                             <CustomInput control={form.control} name={'panNumber'} label={'PAN Number'} placeholder={'Enter pan number'} />
+                                    <CustomInput control={form.control} name={'postalCode'} label={'Postal Code'} placeholder={'Ex. : 482002'} />
+                                    <CustomInput control={form.control} name={'dateOfBirth'} label={'Date of Birth'} placeholder={'YYYY-MM-DD'} />
+                                </div>
+                                <CustomInput control={form.control} name={'ssn'} label={'ssn'} placeholder={'Enter ssn number'} />
                             </>
-                    )}
-                        
+                        )}
+
 
                         <CustomInput control={form.control} name={'email'} label={'email'} placeholder={'Enter your email'} />
                         <CustomInput control={form.control} name={'password'} label={'password'} placeholder={'Enter your password'} />
-                        
+
                         <div className='flex flex-col'>
-                        <Button type="submit" disabled={loading} className='form-btn'>
-                            { loading ?  (
-                                <>
-                                <Loader2 size={20}
-                                className='animate-spin'/>&nbsp;
-                                Loading...
-                                </>
-                            ): type==='sign-in'? 'Sign in':'Sign up'}
-                        </Button>
+                            <Button type="submit" disabled={loading} className='form-btn'>
+                                {loading ? (
+                                    <>
+                                        <Loader2 size={20}
+                                            className='animate-spin' />&nbsp;
+                                        Loading...
+                                    </>
+                                ) : type === 'sign-in' ? 'Sign in' : 'Sign up'}
+                            </Button>
                         </div>
                     </form>
                 </Form>
 
                 <footer className='flex justify-center gap-1'>
                     <p>{type === 'sign-in'
-                    ? "don't have an account?": "Already have an account"}</p>
-                    <Link href={type==='sign-in'? '/sign-up':'/sign-in'}>
-                        {type==='sign-in'? <span className='text-blue-500'>Sign-Up</span>:<span className='text-blue-500'>Sign-In</span>}
+                        ? "don't have an account?" : "Already have an account"}</p>
+                    <Link href={type === 'sign-in' ? '/sign-up' : '/sign-in'}>
+                        {type === 'sign-in' ? <span className='text-blue-500'>Sign-Up</span> : <span className='text-blue-500'>Sign-In</span>}
                     </Link>
 
                 </footer>
