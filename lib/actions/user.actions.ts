@@ -10,7 +10,7 @@ import { revalidatePath } from "next/cache";
 import { addFundingSource, createDwollaCustomer } from "./dwolla.actions";
 
 
-const {APPWRITE_DATABASE_ID,APPWRITE_USER_COLLECTION_ID,APPWRITE_BANK_COLLECTION_ID}= process.env;
+const {APPWRITE_DATABASE_ID,APPWRITE_USER_COLLECTION_ID,APPWRITE_BANK_COLLECTION_ID,PLAID_CLIENT_ID,PLAID_SECRET}= process.env;
 
 export const signUp = async ({ password, ...userData }: SignUpParams) => {
   const { email, firstName, lastName } = userData;
@@ -154,10 +154,17 @@ export async function getLoggedInUser() {
     user,
   }: exchangePublicTokenProps) => {
     try {
+      console.log('entered exchangePublicTOken function')
       // Exchange public token for access token and item ID
       const response = await plaidClient.itemPublicTokenExchange({
+        client_id: PLAID_CLIENT_ID!,
+        secret: PLAID_SECRET!,
         public_token: publicToken,
-      });
+      })
+      console.log('response from plaid client',response)
+      if (!response || !response.data) {
+        throw new Error('Invalid response from Plaid');
+      }
   
       const accessToken = response.data.access_token;
       const itemId = response.data.item_id;
@@ -165,19 +172,30 @@ export async function getLoggedInUser() {
       // Get account information from Plaid using the access token
       const accountsResponse = await plaidClient.accountsGet({
         access_token: accessToken,
+        client_id: PLAID_CLIENT_ID,
+        secret: PLAID_SECRET,
       });
-  
+      
+      console.log('accountsResponse ij:----', accountsResponse)
       const accountData = accountsResponse.data.accounts[0];
+      console.log('accountData ij:----', accountData)
   
       // Create a processor token for Dwolla using the access token and account ID
       const request: ProcessorTokenCreateRequest = {
         access_token: accessToken,
         account_id: accountData.account_id,
         processor: "dwolla" as ProcessorTokenCreateRequestProcessorEnum,
+        client_id: PLAID_CLIENT_ID,
+        secret: PLAID_SECRET,
       };
+
+      console.log('request ij----',request)
   
       const processorTokenResponse = await plaidClient.processorTokenCreate(request);
       const processorToken = processorTokenResponse.data.processor_token;
+
+      console.log('processorToken ij:----',processorToken)
+
   
        // Create a funding source URL for the account using the Dwolla customer ID, processor token, and bank name
        const fundingSourceUrl = await addFundingSource({
@@ -185,10 +203,14 @@ export async function getLoggedInUser() {
         processorToken,
         bankName: accountData.name,
       });
+
+      console.log('fundingSourceUrl ij:-----', fundingSourceUrl);
       
       // If the funding source URL is not created, throw an error
       if (!fundingSourceUrl) throw Error;
-  
+
+      const sharableId = encryptId(fundingSourceUrl);
+      console.log('about to create bank account')
       // Create a bank account using the user ID, item ID, account ID, access token, funding source URL, and shareableId ID
       await createBankAccount({
         userId: user.$id,
@@ -196,8 +218,10 @@ export async function getLoggedInUser() {
         accountId: accountData.account_id,
         accessToken,
         fundingSourceUrl,
-        sharableId: encryptId(accountData.account_id),
+        sharableId,
       });
+
+      console.log('account created successfully')
   
       // Revalidate the path to reflect the changes
       revalidatePath("/");
