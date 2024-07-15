@@ -262,7 +262,7 @@ export async function getLoggedInUser() {
 
   export const getBanks=async({userId}:getBanksProps)=>{
     try {
-      console.log('userid in getBanks,', userId);
+      
       const {database} = await createAdminClient();
       const banks = await database.listDocuments(
         APPWRITE_DATABASE_ID!,
@@ -283,7 +283,7 @@ export async function getLoggedInUser() {
         APPWRITE_BANK_COLLECTION_ID!,
         [Query.equal('$id',[documentId])] //databse query in appwrite 
       )
-      console.log('bank in getbank function',bank)
+      
       return parseStringify(bank.documents[0]);
       
     } catch (error) {
@@ -292,13 +292,17 @@ export async function getLoggedInUser() {
 
   export const getBankByAccountId = async({accountId}:getBankByAccountIdProps)=>{
     try {
+      console.log('entered in getBankByAccountId');
+      console.log('accountId', accountId);
       const {database} = await createAdminClient();
       const bank = await database.listDocuments(
         APPWRITE_DATABASE_ID!,
         APPWRITE_BANK_COLLECTION_ID!,
-        [Query.equal('accountId',[accountId])]
+        [Query.equal('fundingSourceUrl',[accountId])]   //accountId
       )
+      console.log('bank in accountid function is ',bank)
       if(bank.total!==1) return null;
+      return parseStringify(bank.documents[0]);
     } catch (error) {
       console.error('Error occurred in getBankByAccountId function:',error)
     }

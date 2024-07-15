@@ -54,12 +54,16 @@ const PaymentTransferForm = ({ accounts }: PaymentTransferFormProps) => {
 
     try {
       const receiverAccountId = decryptId(data.sharableId);
+      
+      console.log('Received',receiverAccountId);
+      
       const receiverBank = await getBankByAccountId({
         accountId: receiverAccountId,
       });
       console.log('receiver bank is ', receiverBank)
       const senderBank = await getBank({ documentId: data.senderBank });
-
+       
+      console.log('sender bank is ',senderBank);
       const transferParams = {
         sourceFundingSourceUrl: senderBank.fundingSourceUrl,
         destinationFundingSourceUrl: receiverBank.fundingSourceUrl,
@@ -201,7 +205,7 @@ const PaymentTransferForm = ({ accounts }: PaymentTransferFormProps) => {
                 <div className="flex w-full flex-col">
                   <FormControl>
                     <Input
-                      placeholder="Enter the public account number"
+                      placeholder="Enter the sharable id"
                       className="input-class"
                       {...field}
                     />

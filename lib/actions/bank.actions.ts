@@ -160,30 +160,30 @@ import { getBanks, getBank } from "./user.actions";
 export const getAccounts = async ({ userId }: { userId: string }) => {
   try {
     // Get banks from db
-    console.log('userId is ==', userId);
+   
     const banks = await getBanks({ userId });
     if (!banks || banks.length === 0) {
       throw new Error('No banks found for the user.');
     }
-    console.log('banks data is---', banks);
+    
 
     const accountPromises = banks.map(async (bank: Bank) => {
       try {
         // Get each account info from Plaid
-        console.log('Processing bank:', bank);
+        
         const accountsResponse = await plaidClient.accountsGet({
           access_token: bank.accessToken,
           client_id: process.env.PLAID_CLIENT_ID!,
           secret: process.env.PLAID_SECRET!,
         });
-        console.log('Got the accountsResponse:', accountsResponse);
+        
 
         if (!accountsResponse || !accountsResponse.data || !accountsResponse.data.accounts) {
           throw new Error('Invalid response from Plaid API');
         }
 
         const accountData = accountsResponse.data.accounts[0];
-        console.log('Got the accountData:', accountData);
+
 
         // Get institution info from Plaid
         const institution = await getInstitution({
@@ -214,11 +214,11 @@ export const getAccounts = async ({ userId }: { userId: string }) => {
 
     // Wait for all promises to resolve
     const accounts = await Promise.all(accountPromises);
-    console.log('All accounts fetched:', accounts);
+   
 
     // Filter out any null results (if any bank fetching failed)
     const validAccounts = accounts.filter(account => account !== null) as Account[];
-    console.log('Valid accounts:', validAccounts);
+    
 
     const totalBanks = validAccounts.length;
     const totalCurrentBalance = validAccounts.reduce((total, account) => total + account.currentBalance, 0);
@@ -236,7 +236,7 @@ export const getAccounts = async ({ userId }: { userId: string }) => {
 // Get one bank account
 export const getAccount = async ({ appwriteItemId }: getAccountProps) => {
   try {
-    console.log('appwrite item id ----',appwriteItemId)
+   
     // get bank from db
     const bank = await getBank({ documentId: appwriteItemId });
     
