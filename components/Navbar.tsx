@@ -16,6 +16,8 @@ import { sidebarLinks } from '@/constants'
 import { usePathname } from 'next/navigation'
 import { cn } from '@/lib/utils'
 import Footer from './Footer'
+import PlaidLink from './PlaidLink'
+
 
 
 const Navbar = ({ user }: MobileNavProps) => {
@@ -35,7 +37,7 @@ const Navbar = ({ user }: MobileNavProps) => {
                         <SheetClose asChild>
                             <nav className='flex h-full flex-col text-white gap-6 pt-16 '>
                                 {sidebarLinks.map((item) => {
-                                    const isActive = pathName === item.route || pathName.startsWith(`${item.route}`)
+                                    const isActive = pathName === item.route 
                                     return (
                                         <SheetClose asChild key={item.label}>
                                         <Link href={item.route} key={item.label}
@@ -45,9 +47,11 @@ const Navbar = ({ user }: MobileNavProps) => {
                                             
                                             <p className={cn('text-16 font-semibold text-black-2', { 'text-white': isActive })}>{item.label}</p>
                                         </Link>
+                                        
                                         </SheetClose>
                                     )
                                 })}
+                                <PlaidLink user={user} />
                             </nav>
                         </SheetClose>
                                 <Footer user={user} type='mobile' />
