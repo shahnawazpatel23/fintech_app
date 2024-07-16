@@ -1,16 +1,17 @@
-"use client"
+
 import BankCard from '@/components/BankCard';
 import HeaderBox from '@/components/HeaderBox'
 import { getAccounts } from '@/lib/actions/bank.actions';
 import { getLoggedInUser } from '@/lib/actions/user.actions'
-import { useRouter } from 'next/navigation';
+import { redirect } from 'next/navigation';
+
 import React from 'react'
 
 const MyBanks = async() => {
-  const router = useRouter();
+
   const loggedIn = await getLoggedInUser();
   
-  if(!loggedIn) return router.push('/sign-up')
+  if(!loggedIn) return redirect('/sign-up')
   
   const accounts = await getAccounts({
     userId: loggedIn?.$id,

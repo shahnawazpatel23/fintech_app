@@ -1,19 +1,19 @@
-"use client"
+
 import HeaderBox from '@/components/HeaderBox'
 import RecentTransactions from '@/components/RecentTransactions';
 import RightSidebar from '@/components/RightSidebar';
 import TotalBalanceBox from '@/components/TotalBalanceBox';
 import { getAccount, getAccounts } from '@/lib/actions/bank.actions';
 import { getLoggedInUser } from '@/lib/actions/user.actions';
-import { useRouter } from 'next/navigation';
+import { redirect } from 'next/navigation';
+
 
 
 const Home = async ({ searchParams: { id, page } }: SearchParamProps) => {
-  const router = useRouter();
+  
   const currentPage = Number(page as string) || 1;
   const loggedIn = await getLoggedInUser();
-  if(!loggedIn) return router.push('/sign-up')
-  
+  if(!loggedIn) return redirect('/sign-up')
   const accounts = await getAccounts({ 
     userId: loggedIn.$id, 
   })
