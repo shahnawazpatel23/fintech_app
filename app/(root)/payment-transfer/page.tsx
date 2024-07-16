@@ -4,7 +4,7 @@ import { getAccounts } from '@/lib/actions/bank.actions'
 import { getLoggedInUser } from '@/lib/actions/user.actions'
 import PaymentTransferForm from '@/components/PaymentTransferForm'
 import React from 'react'
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/navigation'
 
 
 const Transfer = async() => {
