@@ -4,7 +4,7 @@ import TransactionsTable from '@/components/TransactionsTable';
 import { getAccount, getAccounts } from '@/lib/actions/bank.actions';
 import { getLoggedInUser } from '@/lib/actions/user.actions';
 import { formatAmount } from '@/lib/utils';
-import { TrafficCone } from 'lucide-react';
+
 import React from 'react'
 
 const TransactionHistory = async ({ searchParams: { id, page } }: SearchParamProps) => {

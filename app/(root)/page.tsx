@@ -4,11 +4,15 @@ import RightSidebar from '@/components/RightSidebar';
 import TotalBalanceBox from '@/components/TotalBalanceBox';
 import { getAccount, getAccounts } from '@/lib/actions/bank.actions';
 import { getLoggedInUser } from '@/lib/actions/user.actions';
+import { useRouter } from 'next/navigation';
+
 
 const Home = async ({ searchParams: { id, page } }: SearchParamProps) => {
+  const router = useRouter();
   const currentPage = Number(page as string) || 1;
   const loggedIn = await getLoggedInUser();
-  console.log('logged in user --=-==-=--',loggedIn)
+  if(!loggedIn) return router.push('/sign-up')
+  
   const accounts = await getAccounts({ 
     userId: loggedIn.$id, 
   })
