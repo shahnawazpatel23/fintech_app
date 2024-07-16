@@ -1,3 +1,4 @@
+"use client"
 import HeaderBox from '@/components/HeaderBox'
 
 import { getAccounts } from '@/lib/actions/bank.actions'
