@@ -71,6 +71,7 @@ const AuthForm = ({ type }: { type: string }) => {
                 }
                 const newUser = await signUp(userData);
                 setUser(newUser);
+                router.push('/');      // redirect
             }
             if (type === 'sign-in') {
                 const response = await signIn({
