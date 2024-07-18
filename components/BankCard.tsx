@@ -32,7 +32,7 @@ const BankCard = ({account,userName,showBalance}:CreditCardProps) => {
             <Image src={"/icons/lines.png"} width={316} height={190} alt='lines' className='absolute top-0 left-0'/>
             </Link> 
 
-          <Copy title={account?.sharableId}/>  
+          {showBalance && <Copy title={account?.sharableId}/> } 
     </div>
   )
 }

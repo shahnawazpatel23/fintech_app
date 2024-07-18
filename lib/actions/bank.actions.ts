@@ -16,77 +16,77 @@ import { getTransactionsByBankId } from "./transaction.actions";
 import { getBanks, getBank } from "./user.actions";
 
 // Get multiple bank accounts
-// export const getAccounts = async ({ userId }: getAccountsProps) => {
-//   try {
+export const getAccounts = async ({ userId }: getAccountsProps) => {
+  try {
     
-//     // get banks from db
-//     const banks = await getBanks({ userId });
+    // get banks from db
+    const banks = await getBanks({ userId });
     
 
-//     const accounts = await Promise.all(
-//       banks?.map(async (bank: Bank) => {
-//         // get each account info from plaid
+    const accounts = await Promise.all(
+      banks?.map(async (bank: Bank) => {
+        // get each account info from plaid
+        console.log('bank', bank)
+        
+        const accountsResponse = await plaidClient.accountsGet({
+          access_token: bank.accessToken,
+          client_id:process.env.PLAID_CLIENT_ID!,
+          secret:process.env.PLAID_SECRET!,
+        });
         
         
-//         const accountsResponse = await plaidClient.accountsGet({
-//           access_token: bank.accessToken,
-//           client_id:process.env.PLAID_CLIENT_ID!,
-//           secret:process.env.PLAID_SECRET!,
-//         });
-        
-        
-//         const accountData = accountsResponse.data.accounts[0];
+        const accountData = accountsResponse.data.accounts[0];
 
         
 
-//         // get institution info from plaid
-//         const institution = await getInstitution({
-//           institutionId: accountsResponse.data.item.institution_id!,
+        // get institution info from plaid
+        const institution = await getInstitution({
+          institutionId: accountsResponse.data.item.institution_id!,
           
-//         });
+        });
 
         
         
         
 
-//         const account = {
-//           id: accountData.account_id,
-//           availableBalance: accountData.balances.available!,
-//           currentBalance: accountData.balances.current!,
-//           institutionId: institution.institution_id,
-//           name: accountData.name,
-//           officialName: accountData.official_name,
-//           mask: accountData.mask!,
-//           type: accountData.type as string,
-//           subtype: accountData.subtype! as string,
-//           appwriteItemId: bank.$id,
-//           sharableId: bank.sharableId,
+        const account = {
+          id: accountData.account_id,
+          availableBalance: accountData.balances.available!,
+          currentBalance: accountData.balances.current!,
+          institutionId: institution.institution_id,
+          name: accountData.name,
+          officialName: accountData.official_name,
+          mask: accountData.mask!,
+          type: accountData.type as string,
+          subtype: accountData.subtype! as string,
+          appwriteItemId: bank.$id,
+          sharableId: bank.sharableId,
           
-//         };
+        };
         
         
         
 
-//         return account;
-//       })
+        return account;
+      })
 
-//     )
-//     if(accounts) console.log('accounts k baare mai jaankaari', accounts);
+    )
+    if(accounts) console.log('accounts k baare mai jaankaari', accounts);
     
-//     console.log('accounts-------',accounts)
-//     const totalBanks = accounts.length; 
-//     console.log('totalBanks: ', totalBanks);
+    console.log('accounts-------',accounts)
+    const totalBanks = accounts.length; 
+    console.log('totalBanks: ', totalBanks);
     
-//     const totalCurrentBalance = accounts.reduce((total, account) => {
-//       return total + account.currentBalance;
-//     }, 0);
+    const totalCurrentBalance = accounts.reduce((total, account) => {
+      return total + account.currentBalance;
+    }, 0);
     
-// console.log('totalBalance: ', totalCurrentBalance);
-//     return parseStringify({ data: accounts, totalBanks, totalCurrentBalance });
-//   } catch (error) {
-//     console.error("An error occurred while getting the accounts1:", error);
-//   }
-// };
+console.log('totalBalance: ', totalCurrentBalance);
+    return parseStringify({ data: accounts, totalBanks, totalCurrentBalance });
+  } catch (error) {
+    console.error("An error occurred while getting the accounts1:", error);
+  }
+};
 // export const getAccounts = async ({ userId }: getAccountsProps) => {
 //   try {
 //     // Get banks from db
@@ -157,86 +157,87 @@ import { getBanks, getBank } from "./user.actions";
 //   }
 // };
 
-export const getAccounts = async ({ userId }: { userId: string }) => {
-  try {
-    // Get banks from db
+// export const getAccounts = async ({ userId }: getAccountsProps) => {
+//   try {
+//     // Get banks from db
    
-    const banks = await getBanks({ userId });
-    if (!banks || banks.length === 0) {
-      throw new Error('No banks found for the user.');
-    }
+//     const banks = await getBanks({ userId });
+//     console.log('banks ->',banks)
+//     if (!banks || banks.length === 0) {
+//       throw new Error('No banks found for the user.');
+//     }
     
 
-    const accountPromises = banks.map(async (bank: Bank) => {
-      try {
-        // Get each account info from Plaid
+//     const accountPromises = banks.map(async (bank: Bank) => {
+//       try {
+//         // Get each account info from Plaid
         
-        const accountsResponse = await plaidClient.accountsGet({
-          access_token: bank.accessToken,
-          client_id: process.env.PLAID_CLIENT_ID!,
-          secret: process.env.PLAID_SECRET!,
-        });
+//         const accountsResponse = await plaidClient.accountsGet({
+//           access_token: bank.accessToken,
+//           client_id: process.env.PLAID_CLIENT_ID!,
+//           secret: process.env.PLAID_SECRET!,
+//         });
         
 
-        if (!accountsResponse || !accountsResponse.data || !accountsResponse.data.accounts) {
-          throw new Error('Invalid response from Plaid API');
-        }
+//         if (!accountsResponse || !accountsResponse.data || !accountsResponse.data.accounts) {
+//           throw new Error('Invalid response from Plaid API');
+//         }
 
-        const accountData = accountsResponse.data.accounts[0];
+//         const accountData = accountsResponse.data.accounts[0];
 
 
-        // Get institution info from Plaid
-        const institution = await getInstitution({
-          institutionId: accountsResponse.data.item.institution_id!,
-        });
+//         // Get institution info from Plaid
+//         const institution = await getInstitution({
+//           institutionId: accountsResponse.data.item.institution_id!,
+//         });
 
-        const account = {
-          id: accountData.account_id,
-          availableBalance: accountData.balances.available!,
-          currentBalance: accountData.balances.current!,
-          officialName: accountData.official_name,
-          mask: accountData.mask!,
-          institutionId: institution.institution_id,
-          name: accountData.name,
-          type: accountData.type as string,
-          subtype: accountData.subtype! as string,
-          appwriteItemId: bank.$id,
-          sharableId: bank.sharableId,
-        };
+//         const account = {
+//           id: accountData.account_id,
+//           availableBalance: accountData.balances.available!,
+//           currentBalance: accountData.balances.current!,
+//           officialName: accountData.official_name,
+//           mask: accountData.mask!,
+//           institutionId: institution.institution_id,
+//           name: accountData.name,
+//           type: accountData.type as string,
+//           subtype: accountData.subtype! as string,
+//           appwriteItemId: bank.$id,
+//           sharableId: bank.sharableId,
+//         };
 
-        return account;
-      } catch (err) {
-        console.error('Error fetching account info for bank:', bank.bankId, err);
-        // Return null to signify failure, or handle it differently
-        return null;
-      }
-    });
+//         return account;
+//       } catch (err) {
+//         console.error('Error fetching account info for bank:', bank.bankId, err);
+//         // Return null to signify failure, or handle it differently
+//         return null;
+//       }
+//     });
 
-    // Wait for all promises to resolve
-    const accounts = await Promise.all(accountPromises);
+//     // Wait for all promises to resolve
+//     const accounts = await Promise.all(accountPromises);
    
 
-    // Filter out any null results (if any bank fetching failed)
-    const validAccounts = accounts.filter(account => account !== null) as Account[];
+//     // Filter out any null results (if any bank fetching failed)
+//     const validAccounts = accounts.filter(account => account !== null) as Account[];
     
 
-    const totalBanks = validAccounts.length;
-    const totalCurrentBalance = validAccounts.reduce((total, account) => total + account.currentBalance, 0);
+//     const totalBanks = validAccounts.length;
+//     const totalCurrentBalance = validAccounts.reduce((total, account) => total + account.currentBalance, 0);
 
-    return parseStringify({ data: validAccounts, totalBanks, totalCurrentBalance });
-  } catch (error) {
-    console.error('An error occurred while getting the accounts:', error);
-    // Optionally, rethrow or handle the error as needed
-    throw error;
-  }
-};
+//     return parseStringify({ data: validAccounts, totalBanks, totalCurrentBalance });
+//   } catch (error) {
+//     console.error('An error occurred while getting the accounts:', error);
+//     // Optionally, rethrow or handle the error as needed
+//     throw error;
+//   }
+// };
 
 
 
 // Get one bank account
 export const getAccount = async ({ appwriteItemId }: getAccountProps) => {
   try {
-   
+   console.log('appwriteItemId', appwriteItemId);
     // get bank from db
     const bank = await getBank({ documentId: appwriteItemId });
     

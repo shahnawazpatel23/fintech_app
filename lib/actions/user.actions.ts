@@ -58,7 +58,7 @@ export const signUp = async ({ password, ...userData }: SignUpParams) => {
       sameSite: "strict",
       secure: true,
     });
-
+    console.log('new user created', newUser)
     return parseStringify(newUser);
   } catch (error) {
     console.error('Error', error);
@@ -226,6 +226,7 @@ export async function getLoggedInUser() {
         dwollaCustomerId: user.dwollaCustomerId,
         processorToken,
         bankName: accountData.name,
+        
       });
 
       
@@ -242,7 +243,7 @@ export async function getLoggedInUser() {
         accountId: accountData.account_id,
         accessToken,
         fundingSourceUrl,
-        sharableId,
+        sharableId, //encryptId(accountData.account_id)
       });
 
       
@@ -262,13 +263,17 @@ export async function getLoggedInUser() {
 
   export const getBanks=async({userId}:getBanksProps)=>{
     try {
+      console.log('userid--->',userId)
       
       const {database} = await createAdminClient();
+      console.log('got database:',database)
       const banks = await database.listDocuments(
         APPWRITE_DATABASE_ID!,
         APPWRITE_BANK_COLLECTION_ID!,
         [Query.equal('userId',[userId])] //databse query in appwrite
       )
+      
+      console.log('banks in getBanks function is ',banks)
       return parseStringify(banks.documents);
       
     } catch (error) {
@@ -276,12 +281,13 @@ export async function getLoggedInUser() {
   }
 
   export const getBank=async({documentId}:getBankProps)=>{
+    console.log('entered in getBank function',documentId);
     try {
       const {database} = await createAdminClient();
       const bank = await database.listDocuments(
         APPWRITE_DATABASE_ID!,
         APPWRITE_BANK_COLLECTION_ID!,
-        [Query.equal('$id',[documentId])] //databse query in appwrite 
+        [Query.equal('$id',[documentId])] //databse query in appwrite $id
       )
       
       return parseStringify(bank.documents[0]);

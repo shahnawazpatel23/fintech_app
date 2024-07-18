@@ -12,14 +12,16 @@ import { redirect } from 'next/navigation';
 const Home = async ({ searchParams: { id, page } }: SearchParamProps) => {
   
   const loggedIn = await getLoggedInUser();
-  if(!loggedIn) return redirect('/sign-up')
+  
+    console.log('logged in use in home',loggedIn)
+    if(!loggedIn) return redirect('/sign-up')
   const accounts = await getAccounts({ 
     userId: loggedIn.$id, 
   })
+  console.log('accounts in home ===',accounts)
+  if(!accounts) return ;
   const currentPage = Number(page as string) || 1;
   console.log('accounts in page ++',accounts)
-  if(!accounts) return;
-
   
   const accountsData = accounts?.data;
  
