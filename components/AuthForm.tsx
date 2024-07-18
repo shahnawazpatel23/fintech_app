@@ -124,11 +124,11 @@ const AuthForm = ({ type }: { type: string }) => {
                                 <CustomInput control={form.control} name={'lastName'} label={'Last Name'} placeholder={'Enter your last name'} />
                             </div>
                                 <CustomInput control={form.control} name={'address1'} label={'Address'} placeholder={'Enter your address'} />
-                                <CustomInput control={form.control} name={'state'} label={'State'} placeholder={'Enter your state'} />
+                                <CustomInput control={form.control} name={'state'} label={'State'} placeholder={'Enter NY'} />
                                 <CustomInput control={form.control} name={'city'} label={'City'} placeholder={'Enter your city'} />
                                 <div className='flex gap-4'>
 
-                                    <CustomInput control={form.control} name={'postalCode'} label={'Postal Code'} placeholder={'Ex. : 482002'} />
+                                    <CustomInput control={form.control} name={'postalCode'} label={'Postal Code'} placeholder={'Enter 12345'} />
                                     <CustomInput control={form.control} name={'dateOfBirth'} label={'Date of Birth'} placeholder={'YYYY-MM-DD'} />
                                 </div>
                                 <CustomInput control={form.control} name={'ssn'} label={'ssn'} placeholder={'Enter ssn number'} />
@@ -152,6 +152,7 @@ const AuthForm = ({ type }: { type: string }) => {
                         </div>
                     </form>
                 </Form>
+                
 
                 <footer className='flex justify-center gap-1'>
                     <p>{type === 'sign-in'
