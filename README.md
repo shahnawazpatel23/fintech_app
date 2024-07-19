@@ -1,36 +1,51 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+Bank Management Application
 
-## Getting Started
+Overview
+This is a fully functional Bank Management Application developed using Next.js for the full-stack development and Appwrite for the backend. It integrates Plaid for securely connecting users' bank accounts and Dwolla as the payment processor, both enabled through Plaid. The project is hosted on Vercel.
 
-First, run the development server:
+Key Features:-
+Fully Responsive & Minimalist Design: Built using shadcn and Tailwind CSS for a clean and user-friendly interface.
+Multi-Bank Connectivity: Allows users to connect more than one bank account.
+Funds Transfer: Users can transfer funds using a sharable ID.
+Transaction History: Maintains a detailed history of all transactions for easy tracking and management.
+Error Management: Integrated Sentry to track and debug errors efficiently, which significantly streamlined the development process.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Project Link: https://bankify-nu.vercel.app/
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+How to Use:-
+Sign Up
+  During the signup process, use state NY or CA (or any state which plaid allows) and postal code 12345.
+Connect Bank Account
+  When connecting your bank account, use the sandbox demo variables provided by Plaid:
+  Username: user_good
+  Password: pass_good
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+env
+#NEXT
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+#APPWRITE
+NEXT_PUBLIC_APPWRITE_ENDPOINT=https://cloud.appwrite.io/v1
+NEXT_PUBLIC_APPWRITE_PROJECT=
+APPWRITE_DATABASE_ID=
+APPWRITE_USER_COLLECTION_ID=
+APPWRITE_ITEM_COLLECTION_ID=
+APPWRITE_BANK_COLLECTION_ID=
+APPWRITE_TRANSACTION_COLLECTION_ID=
+NEXT_APPWRITE_KEY=
 
-## Learn More
+#PLAID
+PLAID_CLIENT_ID=
+PLAID_SECRET=
+PLAID_ENV=
+PLAID_PRODUCTS=
+PLAID_COUNTRY_CODES=
 
-To learn more about Next.js, take a look at the following resources:
+#DWOLLA
+DWOLLA_KEY=
+DWOLLA_SECRET=
+DWOLLA_BASE_URL=
+DWOLLA_ENV=
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
